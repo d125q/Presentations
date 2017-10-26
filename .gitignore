@@ -215,7 +215,7 @@ TSWLatexianTemp*
 *~[0-9]*
 
 # auto folder when using Emacs and AUCTeX
-auto/*
+auto/
 
 # expex forward references with \gathertags
 *-tags.tex
