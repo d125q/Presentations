@@ -1,0 +1,371 @@
+\documentclass[xcolor={svgnames, table}, usepdftitle=false]{beamer}
+
+% Beamer
+\usetheme{Boadilla}
+\usefonttheme{serif}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{caption}[numbered]
+
+% Fonts
+\usepackage{fontspec}
+
+% Languages
+\usepackage{polyglossia}
+
+% Bibliographies
+\usepackage[hyperref, backend=biber]{biblatex}
+
+% Microtype
+\usepackage[babel]{microtype}
+
+% Mathematics
+\usepackage{mathtools}
+\usepackage[math-style=TeX, bold-style=upright]{unicode-math}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{prftree}
+
+% Source code
+\usepackage{fancyvrb}
+\usepackage[newfloat]{minted}
+
+% Logos
+\usepackage{texlogos}
+
+% Boxes
+\usepackage{varwidth}
+\usepackage[skins, minted]{tcolorbox}
+
+% Tables
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabu}
+
+% Graphics and captioning
+\usepackage{graphicx}
+\usepackage[compatibility=false]{caption}
+\usepackage{subcaption}
+
+% Numbers
+\usepackage[binary-units=true]{siunitx}
+\usepackage{nth}
+
+% Plotting
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+
+% Cryptocode (load after `hyperref`)
+\usepackage[primitives, operators, keys]{cryptocode}
+
+% Quotations
+\usepackage[strict]{csquotes}
+
+% Dashes and hyphens
+\usepackage[shortcuts]{extdash}
+
+%
+% Package setup
+%
+
+\setmainlanguage{english}
+\setmathfont{Latin Modern Math}
+\mathtoolsset{mathic=true}
+\sisetup{%
+  detect-all,
+  detect-display-math,
+  binary-units
+}
+\addbibresource{\jobname.bib}
+\hypersetup{%
+  unicode,
+  pdfinfo={%
+    Title={Trusted Timestamping},
+    Subject={Computer Security},
+    Author={Dario Gjorgjevski and Petar Tonkovikj},
+    Keywords={Computer Security, Trusted Timestamping, Flask, OpenSSL}
+  }
+}
+\usetikzlibrary{patterns, fit, positioning, calc, shapes.arrows}
+\pgfplotsset{compat=newest}
+\graphicspath{{Figures/}}
+
+%
+% Commands
+%
+
+% Vectors and matrices (boldface)
+\renewcommand*{\vec}{\symbf}
+\newcommand*{\mat}{\symbf}
+
+% Expected value and variance
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\var}{var}
+
+% Matrix rank
+\DeclareMathOperator{\rank}{rank}
+
+%
+% Title
+%
+
+\title{Notary}
+\subtitle{A Flask Application for Trusted Timestamping}
+\author[Dario Gj.\ \& Petar T.]{%
+  Dario Gjorgjevski\inst{1} \and Petar Tonkovikj\inst{1}
+}
+\institute[FCSE]{%
+  \inst{1}Faculty of Computer Science and Engineering\\%
+  Ss.\ Cyril and Methodius University in Skopje
+}
+\date{\today}
+
+%
+% Logo
+%
+
+\logo{\includegraphics[height=0.66cm]{../Logo_ФИНКИ.pdf}}
+
+%
+% Table of contents
+%
+
+\AtBeginSection[]{%
+  \begin{frame}{Contents}
+    \tableofcontents[currentsection, hideothersubsections]
+  \end{frame}
+}
+
+%
+% Document
+%
+
+\begin{document}
+
+\begin{frame}
+  \titlepage{}
+\end{frame}
+
+\section{Introduction}
+
+\begin{frame}{Trusted Timestamping}
+  \begin{itemize}
+  \item Trusted timestamping is the process of securely keeping track
+    of the creation time of a document.
+  \item \enquote{Securely} roughly means that \emph{no one}\--- not
+    even the owner of the document\--- should be able to change it.
+  \item \href{https://tools.ietf.org/html/rfc3161}{RFC3161} specifies
+    a scheme for trusted timestamping for the PKI \(\implies\) OpenSSL
+    provides an open\-/source implementation of RFC3161.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Web Application}{Architectural choices}
+  \begin{itemize}
+  \item Must ensure independent timestamp generation and verification
+    \(\implies\) two parts meant to be run in isolated environments.
+  \item Both parts are built using
+    Flask\footnote{\url{http://flask.pocoo.org/}} and Python 3.
+  \item Simple and bulletproof architecture built on top of the Web
+    Server Gateway Interface (WSGI).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Web Application}{Deployment}
+  \begin{itemize}
+  \item WSGI scripts can be deployed on the Apache HTTP Server via
+    \Verb+mod\_wsgi+.
+  \item HTTPS and user authentication are provided by OpenSSL via
+    \Verb+mod\_ssl+.
+  \item The certificate used for SSL is signed by our TA, Hristina.
+  \item The certificate used for trusted timestamping is generated and
+    self\-/signed by us.
+  \item We allow only users with certificates issued by our
+    organization to authenticate themselves to the website.  See
+    listing~\ref{lst:authentication}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Web Application}{Authentication}
+\begin{listing}[H]
+\centering
+\begin{minted}[fontsize=\small]{aconf}
+#   Access Control:
+#   With SSLRequire you can do per-directory access control based
+#   on arbitrary complex boolean expressions containing server
+#   variable checks and other lookup directives.  The syntax is a
+#   mixture between C and Perl.  See the mod_ssl documentation
+#   for more details.
+<Location>
+SSLRequire %{SSL_CLIENT_I_DN_O} in \
+           {"Faculty of Computer Science and Engineering", \
+	    "Ss. Cyril and Methodius University", \
+	    "FCSE", "UKIM"}
+</Location>
+\end{minted}
+\caption{OpenSSL Access Control}\label{lst:authentication}
+\end{listing}
+\end{frame}
+
+\section{Algorithm for Trusted Timestamping}
+
+\begin{frame}{Generating a Trusted Timestamp}{Informally}
+  Generating a trusted timestamp is straightforward and consists of:
+  \begin{enumerate}
+  \item Hashing the data that needs to be timestamped;
+  \item Concatenating the hash with the timestamp;
+  \item Hashing the concatenation of the two;
+  \item Digitally signing the hash with the private key of the TSA.\@
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Generating a Trusted Timestamp}{Formally}
+  A trusted timestamp contains \texttt{data}, a \texttt{timestamp}, a
+  hash \texttt{H}, and a signature \texttt{S}.  The latter two are defined as:
+  \begin{equation}
+    \begin{aligned}
+      \mathtt{H} &\coloneqq \hash(\hash(\mathtt{data}) \concat \mathtt{timestamp})\text{, and} \\
+      \mathtt{S} &\coloneqq \sig_{\mathtt{TSA}}(\mathtt{H})\text,
+    \end{aligned}
+  \end{equation}
+  where \(\sig_{\pk}(\cdot)\) is a digital signature under the private
+  key \(\pk\), \(\hash(\cdot)\) is a cryptographic hash function such
+  as SHA\=/\num{256} or SHA\=/\num{512}, and \enquote{\(\concat\)}
+  denotes concatenation.
+\end{frame}
+
+\begin{frame}{Verifying a Trusted Timestamp}
+  \begin{enumerate}
+  \item Hash data and tentative timestamp as previously.
+  \item Verify the TSA's signature on the provided hash.
+  \item Compare the computed hash and the provided hash.
+  \end{enumerate}
+
+  The two hashes being identical is a strong guarantee of the
+  timestamp being correct (i.e., issued by the TSA) and unaltered.
+\end{frame}
+
+\section{Workflow}
+
+\begin{frame}{Supplying the Authentication Certificate}
+  All major web browsers are able to supply PKI certificates for
+  authentication to the website.  An example doing this on our website
+  is found on figure~\ref{fig:certificate-prompt}.
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{CertificatePrompt.png}
+    \caption{Mozilla Firefox Prompting for Certificate}\label{fig:certificate-prompt}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Verifying the SSL Connection}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=.75\textwidth]{SecureConnection.png}
+    \caption{SSL Certificate Information}\label{fig:secure-connection}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Uploading Documents for Trusted Timestamping}
+  \begin{itemize}
+  \item Uploading is as simple as pressing the \beamerbutton{Upload}
+    button.
+  \item Once on the server, document can be either:
+    \begin{itemize}
+    \item Timestamped; or
+    \item Deleted.
+    \end{itemize}
+  \item Pressing the \beamerbutton{Timestamp} button sends to the user
+    a zip file with a:
+    \begin{itemize}
+    \item Timestamp query (TSQ) used to timestamp the file; and a
+    \item Timestamp response (TSR) containing the trusted timestamp.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Uploading the TSQ and TSR for Verification}
+  The TSQ and TSR files downloaded from the file server can be
+  uploaded to the second web application for verification.  Once
+  uploaded, they are passed as input to the \mintinline{bash}{ts
+    -verify} OpenSSL command.
+  \begin{figure}[H]
+    \includegraphics[width=.75\textwidth]{UploadTrustedTimestamp.png}
+    \caption{Uploading the Required Files}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Inspecting the Verification Results}
+  Once a user has uploaded the TSQ and TSR files, he/she will be
+  redirected to a page containing the results of the verification.
+  \begin{figure}[H]
+    \includegraphics[width=.75\textwidth]{VerificationResults.png}
+    \caption{Output of \mintinline{bash}{ts -verify}}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Pros and Cons of Having Two Separate Applications}
+  \begin{columns}
+    \begin{column}{.55\textwidth}
+      \tcbox[title=Pros, colframe=DarkGreen!75!white]{%
+        \begin{minipage}[t][.6\textheight][t]{\dimexpr.75\textwidth-2\fboxsep-2\fboxrule-5pt\relax}
+          \setlength{\leftmargini}{2pt}
+          \begin{itemize}
+          \item Users to not need to use OpenSSL at all \(\implies\) more
+            user\-/friendliness and less error\-/proneness.
+          \item Separate entities for timestamping and verification
+            \(\implies\) more trustworthiness since the compromise of one
+            entity can be \enquote{detected} by the other.
+          \end{itemize}
+        \end{minipage}
+      }
+    \end{column}
+    \begin{column}{.4\textwidth}
+        \tcbox[title=Cons, colframe=Red!75!white]{%
+          \begin{minipage}[t][.6\textheight][t]{\dimexpr.75\textwidth-2\fboxsep-2\fboxrule-5pt\relax}
+            \setlength{\leftmargini}{2pt}
+            \begin{itemize}
+            \item Deployment: it is harder to deploy and keep two
+              applications up\=/to\=/date.
+            \item Convenience: users need to use two different
+              applications for a single functionality.
+            \end{itemize}
+          \end{minipage}
+        }
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\section{Conclusion and Future Work}
+
+\begin{frame}{Conclusion}
+  \begin{itemize}
+  \item We developed a simple trusted timestamping server.
+  \item Suitable for deployment in \emph{closed} environments: closed
+    in a sense that users can authenticate themselves via
+    certificates.
+  \item All components utilized are open\-/source, simple, and
+    have been used and studied extensively.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Future Work}
+  \begin{itemize}
+  \item Store files on a database for easier fault\-/tolerance and
+    backups.  At present, files are stored on the file system as\=/is.
+  \item Functionality to timestamp files the moment they are uploaded
+    rather than upon request.
+  \item Alternative ways of authentications (user accounts).
+  \item Private files.
+  \item Same certificate for the TSA and the SSL connection.
+  \end{itemize}
+\end{frame}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-command-extra-options: "-shell-escape"
+%%% TeX-engine: luatex
+%%% TeX-master: t
+%%% End:
