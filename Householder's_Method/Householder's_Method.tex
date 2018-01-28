@@ -8,10 +8,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T2A]{fontenc}
 
-% Languages and bibliographies
+% Language
 \usepackage[macedonian]{babel}
-\usepackage{csquotes}
-\usepackage[hyperref, backref, backend=biber]{biblatex}
 
 % Mathematics
 \usepackage{mathtools}
@@ -21,7 +19,6 @@
 % Pseudocode
 \usepackage{algorithm}
 \usepackage{algpseudocode}
-\usepackage{varwidth}
 
 % Microtype
 \usepackage[babel]{microtype}
@@ -65,7 +62,7 @@
 \DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
 
 \usetikzlibrary{shapes, arrows}
-\pgfplotsset{compat=1.13}
+\pgfplotsset{compat=newest}
 
 \graphicspath{{Figures/}{../}}
 
@@ -109,13 +106,13 @@
 % Logo
 %
 
-\logo{\includegraphics[height=0.66cm]{Logo.png}}
+% \logo{\includegraphics[height=0.66cm]{Logo_ФИНКИ.pdf}}
 
 %
 % Table of contents
 %
 
-\AtBeginSection[]{%
+\AtBeginSection{%
   \begin{frame}{Содржина}
     \tableofcontents[currentsection, hideothersubsections]
   \end{frame}
@@ -124,7 +121,7 @@
 \begin{document}
 
 \begin{frame}
-  \titlepage
+  \titlepage{}
 \end{frame}
 
 \section{Вовед и опис на методот}
@@ -147,7 +144,7 @@
         \frac{1}{f(x)} = \frac{1}{f(x) - f(a)}
         &= \frac{x - a}{f(x) - f(a)} \frac{-1}{a (1 - x / {a})} \\
         &\approx \frac{-1}{a f'(a)} \sum\limits_{k = 0}^{\infty}
-        \left(\frac{x}{a}\right)^k\text{.}
+        {\left(\frac{x}{a}\right)}^k\text{.}
       \end{aligned}
     \end{equation}
   }
@@ -165,8 +162,8 @@
       овозможува да го апроксимираме \(a\) со делење на соодветните коефициенти
       во Тајлоровата експанзија на \((1 / {f})(b + x)\):
       \begin{equation*}
-        a \approx b + \frac{(1 / {f})^{(d - 1)}(b)}{(d - 1)!} \frac{d!}{(1 / {f})^{(d)}(b)}
-        = b + d \frac{(1 / {f})^{(d - 1)}(b)}{(1 / {f})^{(d)}(b)}\text{.}
+        a \approx b + \frac{{(1 / {f})}^{(d - 1)}(b)}{(d - 1)!} \frac{d!}{{(1 / {f})}^{(d)}(b)}
+        = b + d \frac{{(1 / {f})}^{(d - 1)}(b)}{{(1 / {f})}^{(d)}(b)}\text{.}
       \end{equation*}
     \end{alertblock}
   }
@@ -178,7 +175,7 @@
     \(f(x) \colon \RR \to \RR\).  За наоѓање на корен на \(f\), вршиме низа
     итерации
     \begin{equation}\label{eq:householder-method}
-      x_{n + 1} = x_n + d \frac{(1 / {f})^{(d - 1)}(x_n)}{(1 / {f})^{(d)}(x_n)}\text{,}
+      x_{n + 1} = x_n + d \frac{{(1 / {f})}^{(d - 1)}(x_n)}{{(1 / {f})}^{(d)}(x_n)}\text{,}
     \end{equation}
     почнувајќи од претпоставка \(x_0\).
   \end{definition}
@@ -196,7 +193,7 @@
   \item Кога \(d = 1\) го добиваме Њутн--Рафсоновиот метод:
     \begin{align*}
       x_{n + 1} &= x_n + \frac{(1 / {f})(x_n)}{(1 / {f})'(x_n)} \\
-                &= x_n + \frac{1}{f(x_n)} \left(\frac{-f'(x_n)}{f(x_n)^2}\right)^{-1} \\
+                &= x_n + \frac{1}{f(x_n)} {\left(\frac{-f'(x_n)}{{f(x_n)}^2}\right)}^{-1} \\
                 &= x_n - \frac{f(x_n)}{f'(x_n)}\text{.}
     \end{align*}
   \item Кога \(d = 2\) го добиваме Халеевиот метод.
@@ -276,7 +273,7 @@
   \begin{align*}
     f'(x) &= 10 + 12 x + 3 x^2 \\
     f''(x) &= 12 + 6 x \\
-    f'''(x) &= 6\text{.}
+    f'\,''(x) &= 6\text{.}
   \end{align*}
 
   Од друга страна, може да се изведат експлицитни формули за \(x_{n + 1}\) за
@@ -286,7 +283,7 @@
   \item Кога \(d = 2\), \(x_{n + 1} = x_n + (-2 f f') / {(2 f'^2 - f f'')}\).
   \item Кога \(d = 3\),
     \(\displaystyle x_{n + 1} = x_n - \frac{6 f f'^2 - 3 f^2 f''}{6 f'^3 - 6 f
-      f' f'' + f^2 f'''}\).
+      f' f'' + f^2 f'\,''}\).
   \end{itemize}
 \end{frame}
 
@@ -365,7 +362,7 @@
   За да го изведеме Хаусхолдеровиот метод од ред \(d\), ќе започнеме со Падеева
   апроксимација на \(f(x + h)\) од ред \([1 / {(d - 1)}]\).  Таа има облик
   \begin{equation}\label{eq:pade-approximation}
-    f(x + h) = \frac{a_0 + h}{b_0 + b_1 h + \ldots + b_{d - 1} h^{d - 1}} +
+    f(x + h) = \frac{a_0 + h}{b_0 + b_1 h + \cdots + b_{d - 1} h^{d - 1}} +
     \mathcal{O}(h^{d + 1})\text{.}
   \end{equation}
   
@@ -379,7 +376,7 @@
   \begin{equation}\label{eq:taylor-expansion}
     \begin{aligned}
       (1 / {f})(x + h) &= (1 / {f})(x) + (1 / {f})'(x) h + \ldots \\
-      &+ (1 / {f})^{(d - 1)}(x) \frac{h^{d - 1}}{(d - 1)!} + (1 / {f})^{(d)}(x)
+      &+ {(1 / {f})}^{(d - 1)}(x) \frac{h^{d - 1}}{(d - 1)!} + {(1 / {f})}^{(d)}(x)
       \frac{h^d}{d!}\text{.}
     \end{aligned}
   \end{equation}
@@ -391,18 +388,18 @@
 \begin{frame}{Наоѓање на нулата во \(h = -a_0\)}
   Користејќи ги својствата на Падеевата апроксимација, добиваме
   \[
-    0 = b_d = a_0 (1 / {f})^{(d)}(x) \frac{1}{d!} + (1 / {f})^{(d - 1)}(x)
+    0 = b_d = a_0 {(1 / {f})}^{(d)}(x) \frac{1}{d!} + {(1 / {f})}^{(d - 1)}(x)
     \frac{1}{(d - 1)!}\text{.}
   \]
 
   Оттука веднаш се добива
   \[
-    h = -a_0 = d \frac{(1 / {f})^{(d - 1)}(x)}{(1 / {f})^{(d)}(x)}\text{,}
+    h = -a_0 = d \frac{{(1 / {f})}^{(d - 1)}(x)}{{(1 / {f})}^{(d)}(x)}\text{,}
   \]
   што ја дава итерацијата во Хаусхолдеровиот метод.
 \end{frame}
 
-\begin{frame}[plain, c]
+\begin{frame}[plain]
 \begin{center}
   {\huge КРАЈ}\\
   Прашања?
@@ -413,7 +410,6 @@
 
 %%% Local Variables:
 %%% mode: latex
-%%% fill-column: 80
 %%% TeX-command-extra-options: "-shell-escape"
 %%% TeX-engine: default
 %%% TeX-master: t
