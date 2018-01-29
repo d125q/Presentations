@@ -1,6 +1,6 @@
 \documentclass[usepdftitle=false]{beamer}
 
-\usetheme{Boadilla}
+\usetheme[secheader]{Boadilla}
 \usefonttheme{professionalfonts}
 \setbeamertemplate{navigation symbols}{}
 
@@ -170,12 +170,12 @@
 \title{Error\-/Correcting Codes in the Rank Metric}
 \subtitle{With Applications to Cryptography}
 \author[Dario Gj.]{%
-  Dario Gjorgjevski\inst{1}\\%
+  Dario Gjorgjevski\thanks{Mentored by prof.\ Simona Samardjiska}\\%
   \href{mailto:gjorgjevski.dario@students.finki.ukim.mk}%
   {\nolinkurl{gjorgjevski.dario@students.finki.ukim.mk}}
 }
 \institute[FCSE]{%
-  \inst{1}Faculty of Computer Science and Engineering\\%
+  Faculty of Computer Science and Engineering\\%
   Ss.\ Cyril and Methodius University in Skopje
 }
 \date{January 30, 2018}
@@ -192,7 +192,7 @@
 % Table of contents
 %
 
-\AtBeginSection[]{%
+\AtBeginSection{%
   \begin{frame}{Contents}
     \tableofcontents[hideothersubsections]
   \end{frame}%
@@ -204,8 +204,9 @@
 
 \begin{document}
 
-\begin{frame}
-  \titlepage
+\begin{frame}[plain]
+  \addtocounter{framenumber}{-1}
+  \titlepage%
 \end{frame}
 
 \section{Introduction}
@@ -251,7 +252,7 @@
 
 \begin{frame}{The Asymmetric Setting}
   Cryptography in the asymmetric setting is called \emph{public\-/key
-    cryptography}.  The RSA (\textcite{RSA78}) cryptosystem is the
+    cryptography}.  The RSA (\citeauthor{RSA78}) cryptosystem is the
   most widely used and one of the first asymmetric cryptosystems:
   \begin{enumerate}
   \item Encryption is done with the intended recipient's \emph{public
@@ -281,7 +282,7 @@
       p \times q = \num{281512008712700373730275954373439628511}\text?
     \]
   \end{example}
-  Unfortunately, \textcite{Sho97} published an algorithm that can
+  Unfortunately, \citeauthor{Sho97} published an algorithm that can
   factor integers efficiently and hence \enquote{break} RSA\@.  The
   only drawback: it needs a \alert{quantum computer}.
 \end{frame}
@@ -295,7 +296,8 @@
   \item It relies on the hardness of decoding random codes over
     \(\FF_q\) in the Hamming metric.
   \item The problem was proven \NP\=/complete when \(q = 2\) by
-    \textcite{BEvT78}; and in the general case by \textcite{Bar94}.
+    \citeauthor{BEvT78}; and in the general case by
+    \citeauthor{Bar94}.
   \item The best attacks against McEliece come from a family of
     algorithms called \emph{information set decoding} (ISD).
   \end{itemize}
@@ -307,7 +309,7 @@
     \SI{192}{\kilo\byte} to achieve \num{128}\=/bit security against
     information set decoding \(\implies\) very prohibitive for
     embedded devices.
-  \item \Textcite{GPT91} proposed the GPT cryptosystem which uses
+  \item \Citeauthor{GPT91} proposed the GPT cryptosystem which uses
     error\-/correcting codes in the \emph{rank metric}, as opposed to
     McEliece's Goppa codes which correct errors in the Hamming metric.
   \item GPT is believed to require much smaller keys in order to
@@ -320,7 +322,7 @@
 \begin{frame}{Cryptography and the Information Transmission Model}
   \begin{itemize}
   \item The information transmission model comes from the landmark
-    work of \textcite{Sha48}.
+    work of \citeauthor{Sha48}.
   \item It can be utilized for cryptographic purposes by means of
     error\-/correcting codes.  McEliece is one of the most prominent
     examples of such \emph{code\-/based cryptography}.
@@ -389,12 +391,12 @@
   \end{definition}
   \begin{enumerate}
   \item A message \(\vec{x} \in \FF^k\) is encoded as
-    \(\vec{c} \coloneqq \vec{m}\mat{G} \in \FF^n\).
-  \item The codeword \(\vec{c}\) is inflicted by noise and received as
-    \(\vec{y} \coloneqq \vec{c} + \vec{e}\) with
-    \(\norm{\vec{e}} \le t\).
-  \item If an efficient decoding procedure exists for \(\mathcal{C}\),
-    \(\vec{y}\) is decoded into \(\vec{x}\).  (Decoding can of course
+    \(\vec{c} \coloneqq \vec{x} \mat{G} \in \FF^n\).
+  \item The codeword \(\vec{c}\) is inflicted by additive noise
+    \(\vec{e}\) with \(\norm{\vec{e}} \le t\), and received as
+    \(\vec{y} \coloneqq \vec{c} + \vec{e}\).
+  \item \(\vec{y}\) is decoded into \(\vec{x}\) using an efficient
+    decoding procedure for \(\mathcal{C}\).  (Decoding can of course
     be done without an efficient procedure, but will be
     computationally very demanding.)
   \end{enumerate}
@@ -405,7 +407,7 @@
     Let
     \(\vec{x} \coloneqq \begin{bmatrix} x_1 & \cdots &
       x_n \end{bmatrix} \in \FF_{q^m}^n\) and
-    \(\{\beta_1, \ldots, \beta_m\}\) be a basis of \(\FF_q^m\) over
+    \(\{\beta_1, \ldots, \beta_m\}\) be a basis of \(\FF_{q^m}\) over
     \(\FF_q\).  For all \(i \in \{1, \ldots, n\}\), we can write
     \(x_i = \sum_{j = 1}^m x_{i, j} \beta_j\) with
     \(x_{i, j} \in \FF_q\).  The \emph{rank norm} \(\normR{\cdot}{q}\)
@@ -427,10 +429,11 @@
 \subsection{Gabidulin Codes}
 
 \begin{frame}{Generating Gabidulin Codes}
-  \Textcite{Gab85} constructed a family of Maximum Rank Distance codes
-  over \(\FF_{q^m}\) of length \(n \le m\).  For any
-  \(x \in \FF_{q^m}\) and any \(i \in \ZZ\), the quantity
-  \(x^{[i]} \coloneqq x^{q^i}\).
+  \Citeauthor{Gab85} constructed a family of Maximum Rank Distance
+  codes over \(\FF_{q^m}\) of length \(n \le m\).  For any
+  \(x \in \FF_{q^m}\) and any \(i \in \ZZ\),
+  \(x^{[i]} \coloneqq x^{q^i}\).  (The operation is applied
+  component\-/wise to vectors and matrices.)
   \begin{definition}[Gabidulin Code]
     Let
     \(\vec{g} \coloneqq \begin{bmatrix} g_1 & \cdots &
@@ -469,7 +472,8 @@
     \(\Gab_k(\vec{g})\).
   \item Let \(\mat{S} \in \GL_k(\FF_{q^m})\) and
     \(\mat{P} \in \GL_{n + l}(\FF_q)\).  Note that \(\mat{P}\) is an
-    \emph{isometry} in the rank metric.
+    \emph{isometry} in the rank metric:
+    \(\normR{\vec{x} \mat{P}}{q} = \normR{\vec{x}}{q}\).
   \item Let \(\mat{X}_1 \in \FF_{q^m}^{k \times l}\) and
     \(\mat{X}_2 \in \FF_{q^m}^{k \times n}\) with
     \(\rank\mat{X}_2 < t\).
@@ -495,29 +499,30 @@
   \item To \structure{decrypt} \(\vec{y} \in \FF_{q^m}^n\), apply the
     decoding procedure for \(\Gab_k(\vec{g})\) to the last \(n\)
     components of \(\vec{y} \mat{P}^{-1}\) to obtain
-    \(\vec{x} \mat{S}\), then just multiply by \(\mat{S}^{-1}\).
+    \(\vec{x} \mat{S}\), then multiply by \(\mat{S}^{-1}\).
     \alert{The math works out just nicely}.
   \end{itemize}
 \end{frame}
 
-\begin{frame}{The GPT Cryptosystem}{Common Form of the Public Key}
+\begin{frame}{Common Form of the GPT Public Key}
   We simplified and generalized the following theorem due to
-  \textcite{Ksh07}.
+  \citeauthor{Ksh07}.
   \begin{theorem}[GPT Public Key]
-    Let \(\mat{G}_{\pub}\) be a public GPT key, and assume that
-    \(\rank\mat{X}_2 = t_{\mat{X}_2}\).  Then, there exist
+    Let \(\mat{G}_{\pub}\) be a public GPT generator, and define
+    \(\rank\mat{X}_2 \eqqcolon t_{\mat{X}_2}\).  Then, there exist
     \(\mat{P}^* \in \GL_{l + n}(\FF_q)\),
     \(\mat{X}^* \in \FF_{q^m}^{k \times (l + t_{\mat{X}_2})}\), and
     \(\mat{G}^*\) which generates an
-    \([n - t_{\mat{X}_2}, k]\)\=/Gabidulin code \(\Gab_k(\vec{g}^*)\).
-    Furthermore,
+    \([n - t_{\mat{X}_2}, k]\)\=/Gabidulin code \(\Gab_k(\vec{g}^*)\)
+    such that
     \[
       \mat{G}_{\pub} =
       \mat{S}
       \begin{bmatrix} \mat{X}^* & \mat{G}^* \end{bmatrix}
-      \mat{P}^*\text,
+      \mat{P}^*\text.
     \]
-    and \(\Gab_k(\vec{g}^*)\) can correct more than \(t_{\pub}\) errors.
+    Furthermore, \(\Gab_k(\vec{g}^*)\) can correct more than
+    \(t_{\pub}\) errors.
   \end{theorem}
 \end{frame}
 
@@ -536,7 +541,7 @@
       \end{bmatrix}\text.
     \]
   \end{definition}
-  For any code \(\mathcal{C}\) generated by \(\mat{G}\), we denote by
+  For any code \(\mathcal{C}\) generated by \(\mat{G}\), denote by
   \(\Lambda_i(\mathcal{C})\) the code generated by
   \(\Lambda_i(\mat{G})\).  \alert{It turns out that \(\Lambda_i\) can
     distinguish Gabidulin codes from random}.
@@ -551,8 +556,8 @@
     \]
   \end{lemma}
   On the other hand, if \(\mat{G}\) is a randomly\-/drawn matrix, we
-  obtain something quite different.  \Textcite{Ove05, Ove06, Ove08}
-  formulated a successful attack against GPT using these properties.
+  obtain something quite different.  \Citeauthor{Ove05} formulated a
+  successful attack against GPT using these properties.
   \begin{lemma}
     If \(\mathcal{C} \subset \FF_{q^m}^n\) is a code generated by a
     random matrix \(\mat{G} \in \FF_{q^m}^{k \times n}\),
@@ -563,15 +568,15 @@
   \end{lemma}
 \end{frame}
 
-\begin{frame}{Reparation by \textcite{Loi17}}
+\begin{frame}{Reparation by \citeauthor{Loi17}}
   Crucial to the structural attack against GPT are:
   \begin{itemize}
   \item The distinguishing properties of \(\Gab_k(\vec{g})\) under
     \(\Lambda_i\).
-  \item The invariance of \(\mat{P} \in \GL_{n + l}(\FF_q)\) under
-    \(\Lambda_i\).
+  \item The invariance of \(\mat{P} \in \GL_{n + l}(\FF_q)\) under the
+    Frobenius automorphism: \(\mat{P}^{[i]} = \mat{P}\).
   \end{itemize}
-  \Textcite{Loi17} tackled these issues by
+  \Citeauthor{Loi17} tackled these issues by
   \begin{enumerate}
   \item Letting \(\mat{P} \in \GL_{n + l}(\mathcal{W})\), where
     \(\mathcal{W}\) is a \(\lambda\)\=/dimensional subspace of
@@ -584,9 +589,9 @@
   \(\lambda\).
   \begin{alertblock}{No Structural Exploits}
     Our best attacks against this reparation are \emph{generic}.  The
-    state\-/of\-/the\-/art comes from \textcite{GRS13}; we will try to
-    formulate the \emph{information set decoding} family of algorithms
-    in the rank metric.
+    state\-/of\-/the\-/art comes from \citeauthor{GRS13}; we will
+    formulate and assess an ISD\=/inspired algorithm in the rank
+    metric.
   \end{alertblock}
 \end{frame}
 
@@ -594,7 +599,7 @@
 
 \subsection{State-of-the-Art}
 
-\begin{frame}{Support-Trapping Algorithm by \textcite{GRS13}}
+\begin{frame}{Support-Trapping Algorithm by \citeauthor{GRS13}}
   \begin{itemize}
   \item \(\supp(\vec{e}) \coloneqq\) subspace \(\mathcal{E}\) which
     contains each \(e_i\).
@@ -602,12 +607,13 @@
     w.l.o.g.\ \(w\)\=/dimensional.
   \item However, we may need to guess \(\mathcal{E}' > \mathcal{E}\)
     to be able to solve for \(\vec{e}\).
-  \item \Textcite{GRS13} showed how to retrieve \(\vec{e}\) in time
+  \item \Citeauthor{GRS13} showed how to retrieve \(\vec{e}\) in time
     \(\BigOh(q^{w \ceil{m k / {n}}})\) by:
     \begin{enumerate}
     \item Taking \(\mathcal{E}'\) to be of dimension
       \(\ceil{(n - k) m / {n}}\); and
-    \item Writing each \(e_i\) in \(\mathcal{E}'\).
+    \item Writing each \(e_i\) in \(\mathcal{E}'\) and solving the
+      resulting linear system.
     \end{enumerate}
   \end{itemize}
   \begin{alertblock}{An ISD-Inspired Variation}
@@ -632,21 +638,24 @@
   \item \(\mat{P} \in \FF_q^{\zeta \times m}\) projects from
     \(\FF_q^m\) to \(\mathcal{V}\).
   \item \(\tilde{\mathcal{V}}\) is a \(p\)\=/dimensional subspace of
-    \(\mathcal{V}\), for \(p \in \{0, \ldots, \zeta\}\).
+    \(\mathcal{V}\), for a parameter \(p \in \{0, \ldots, \zeta\}\).
   \item \(\basis{\tilde{\vec{v}}_1, \ldots, \tilde{\vec{v}}_p}\) is a
     basis for \(\tilde{\mathcal{V}}\).
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Description of the Algorithm}
-  \begin{equation}\label{eq:ISD}
-    \{\mat{P} \overbrace{(y_i - {(\vec{x} \mat{G})}_i)}^{e_i} = \sum_{j
-      = 1}^p \gamma_{i, j} \tilde{\vec{v}}_j : i \in \{1, \ldots,
-    n\}\}
-  \end{equation}
-  is a linear system over \(\FF_q\) in \(\zeta n\) equations and
-  \(m k + n p\) unknowns
-  \(\implies \alert{\zeta = \ceil{m k / {n}} + p}\).  Now:
+  \begin{alertblock}{Key ISD Equation}
+    \begin{equation}\label{eq:ISD}
+      \{\mat{P} \overbrace{(y_i - {(\vec{x} \mat{G})}_i)}^{e_i} = \sum_{j
+        = 1}^p \gamma_{i, j} \tilde{\vec{v}}_j : i \in \{1, \ldots,
+      n\}\}
+    \end{equation}
+    is a linear system over \(\FF_q\) in \(\zeta n\) equations and
+    \(m k + n p\) unknowns
+    \(\implies \alert{\zeta = \ceil{m k / {n}} + p}\).
+  \end{alertblock}
+  Now:
   \begin{enumerate}
   \item Assume \(\normR{\vec{e}}{q} \le w\).
   \item Solve for \(\vec{x}\) in~\eqref{eq:ISD}.
@@ -713,15 +722,40 @@
     \qbinom{m - \zeta}{w - p}_q^{-1} \qbinom{m}{w}_q \in \Theta(q^{w
       \zeta + p (p + m - \zeta)})\text.
   \]
-  \(m > \zeta \implies\) it is minimized when \alert{\(p = 0\)} and
-  becomes the same as in~\cite{GRS13}:
+  \(m > \zeta \implies\) minimized when \alert{\(p = 0\)} and becomes
+  the same as in the support\-/trapping algorithm:
   \[
     \Theta(q^{w \ceil{m k / {n}}}).
   \]
 \end{frame}
 
-\begin{frame}[allowframebreaks]{References}
-  \printbibliography{}
+\section{Conclusion and Future Perspective}
+
+\begin{frame}{Closing Thoughts}
+  We:
+  \begin{itemize}
+  \item Presented a simpler and more general common form of the GPT
+    public key.
+  \item Formulated a \enquote{framework} similar to Lee\--Brickell's
+    ISD algorithm in the Hamming metric that already achieves
+    state\-/of\-/the\-/art performance.
+  \end{itemize}
+  We hope to:
+  \begin{itemize}
+  \item Provide an implementation of the algorithm in
+    \textsc{SageMath}.
+  \item Adapt improvements in the spirit of Stern and Dumer to the
+    rank metric.  In the Hamming metric, such improvements allow ISD
+    to work in time \(\BigOh(2^{n / {20}})\).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[plain, c]
+  \addtocounter{framenumber}{-1}
+  \begin{center}
+    \huge%
+    \structure{\emph{Thank you for your attention.}}%
+  \end{center}
 \end{frame}
 
 \end{document}
