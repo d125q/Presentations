@@ -1,4 +1,5 @@
 \documentclass[usepdftitle=false]{beamer}
+\directlua{pdf.setminorversion(7)}
 
 \usetheme[secheader]{Boadilla}
 \usefonttheme{professionalfonts}
@@ -8,55 +9,57 @@
 % Packages
 %
 
-\usepackage{fontspec}
-\usepackage[english]{babel}
-\usepackage[babel, final]{microtype}
+\usepackage{fontspec}%
+\usepackage[english]{babel}%
+\usepackage[babel, final]{microtype}%
 
-\usepackage{mathtools}
-\usepackage{amsthm}
-\usepackage{unicode-math}
-\usepackage[ruled, longend]{algorithm2e}
-\usepackage{prftree}
+\usepackage{mathtools}%
+\usepackage{amsthm}%
+\usepackage[ruled, longend]{algorithm2e}%
+\usepackage{prftree}%
+\usepackage{unicode-math}%
 
-\usepackage{fancyvrb}
-\usepackage[newfloat]{minted}
+\usepackage{fancyvrb}%
+\usepackage[newfloat]{minted}%
 
-\usepackage{booktabs}
-\usepackage{graphicx}
-\usepackage[compatibility=false]{caption}
-\usepackage{subcaption}
+\usepackage{booktabs}%
+\usepackage{graphicx}%
+\usepackage[compatibility=false]{caption}%
+\usepackage{subcaption}%
 
-\usepackage{tikz}
-\usepackage{tikzpeople}
-\usepackage{pgfplots}
-\usepackage{pgfplotstable}
+\usepackage{tikz}%
+\usepackage{tikzpeople}%
+\usepackage{pgfplots}%
+\usepackage{pgfplotstable}%
 
-\usepackage[strict, autopunct]{csquotes}
-\usepackage[hyperref, backend=biber, maxcitenames=2, giveninits]{biblatex}
+\usepackage[strict, autopunct]{csquotes}%
+\usepackage[hyperref, citestyle=authoryear-comp, backend=biber,%
+maxcitenames=2, giveninits, isbn=false, url=false, doi=false]%
+{biblatex}%
 
-\usepackage{siunitx}
-\usepackage{nth}
+\usepackage{siunitx}%
+\usepackage{nth}%
 
-\usepackage[shortcuts]{extdash}
+\usepackage[shortcuts]{extdash}%
 
 %
 % Setup
 %
 
-\defaultfontfeatures{Ligatures=TeX}
-\addbibresource{\jobname.bib}
+\addbibresource{../Bibliography.bib}
 \unimathsetup{%
   math-style=ISO,
   bold-style=ISO%
-}
+}%
 \mathtoolsset{
   mathic%
-}
+}%
+\graphicspath{{../}}%
 \sisetup{%
   detect-all,
   detect-display-math,
   binary-units%
-}
+}%
 \hypersetup{%
   unicode,
   breaklinks,
@@ -64,11 +67,9 @@
   pdfauthor={Dario Gjorgjevski},
   pdfsubject={Bachelor's Thesis},
   pdfkeywords={Coding Theory, Cryptography}%
-}
-\pgfplotsset{compat=newest}
-\usetikzlibrary{calc, positioning, shapes}
-
-
+}%
+\pgfplotsset{compat=newest}%
+\usetikzlibrary{calc, positioning, shapes}%
 
 %
 % Commands
@@ -76,108 +77,108 @@
 
 % Notation from linear algebra
 \AtBeginDocument{%
-  \renewcommand*{\vec}{\symbf}
-  \newcommand*{\mat}{\symbf}
+  \renewcommand*{\vec}{\symbf}%
+  \newcommand*{\mat}{\symbf}%
   \newcommand*{\trans}{\top}%
-}
-\DeclareMathOperator{\rank}{rank}
-\DeclareMathOperator{\lspan}{span}
-\DeclareMathOperator{\supp}{supp}
-\DeclarePairedDelimiter{\basis}{\langle}{\rangle}
-\newcommand*{\M}{\ensuremath{\mathcal{M}}}
-\newcommand*{\GL}{\ensuremath{\mathsf{GL}}}
+}%
+\DeclareMathOperator{\rank}{rank}%
+\DeclareMathOperator{\lspan}{span}%
+\DeclareMathOperator{\supp}{supp}%
+\DeclarePairedDelimiter{\basis}{\langle}{\rangle}%
+\newcommand*{\M}{\ensuremath{\mathcal{M}}}%
+\newcommand*{\GL}{\ensuremath{\mathsf{GL}}}%
 
 % Notation from probability and statistics
-\DeclareMathOperator{\E}{E}
-\DeclareMathOperator{\var}{var}
-\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\E}{\mathbb{E}}%
+\DeclareMathOperator{\var}{var}%
+\DeclareMathOperator{\cov}{cov}%
 
 % Notation from cryptography
-\newcommand*{\pub}{\ensuremath{\mathsf{pub}}}
-\newcommand*{\priv}{\ensuremath{\mathsf{priv}}}
-\newcommand*{\enc}{\ensuremath{\mathsf{Enc}}}
-\newcommand*{\dec}{\ensuremath{\mathsf{Dec}}}
+\newcommand*{\pub}{\ensuremath{\mathsf{pub}}}%
+\newcommand*{\priv}{\ensuremath{\mathsf{priv}}}%
+\newcommand*{\enc}{\ensuremath{\mathsf{Enc}}}%
+\newcommand*{\dec}{\ensuremath{\mathsf{Dec}}}%
 
 % Standard sets
-\newcommand*{\KK}{\ensuremath{\mathbb{K}}}
-\newcommand*{\FF}{\ensuremath{\mathbb{F}}}
-\newcommand*{\NN}{\ensuremath{\mathbb{N}}}
-\newcommand*{\ZZ}{\ensuremath{\mathbb{Z}}}
-\newcommand*{\RR}{\ensuremath{\mathbb{R}}}
-\newcommand*{\CC}{\ensuremath{\mathbb{C}}}
+\newcommand*{\KK}{\ensuremath{\mathbb{K}}}%
+\newcommand*{\FF}{\ensuremath{\mathbb{F}}}%
+\newcommand*{\NN}{\ensuremath{\mathbb{N}}}%
+\newcommand*{\ZZ}{\ensuremath{\mathbb{Z}}}%
+\newcommand*{\RR}{\ensuremath{\mathbb{R}}}%
+\newcommand*{\CC}{\ensuremath{\mathbb{C}}}%
 
 % Complexity classes
-\newcommand*{\NP}{\ensuremath{\mathcal{NP}}}
+\newcommand*{\NP}{\ensuremath{\mathcal{NP}}}%
 
 % Asymptotic notation
-\newcommand*{\BigOh}{\mathcal{O}}
+\newcommand*{\BigOh}{\mathcal{O}}%
 
 % Linear codes
-\newcommand*{\Gop}{\ensuremath{\Gamma}}
-\newcommand*{\Gab}{\ensuremath{\mathfrak{G}}}
+\newcommand*{\Gop}{\ensuremath{\Gamma}}%
+\newcommand*{\Gab}{\ensuremath{\mathfrak{G}}}%
 
 % arg{min,max}
-\DeclareMathOperator*{\argmin}{arg\,min}
-\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}%
+\DeclareMathOperator*{\argmax}{arg\,max}%
 
 % Sampling
-\newcommand*{\sample}{\ensuremath{\gets_{\mathrm{\$}}}}
+\newcommand*{\sample}{\ensuremath{\gets_{\mathrm{\$}}}}%
 
 % Computational problems
-\newcommand*{\MDD}{\ensuremath{\mathsf{MDD}}}
-\newcommand*{\CSD}{\ensuremath{\mathsf{CSD}}}
-\newcommand*{\SW}{\ensuremath{\mathsf{SW}}}
-\newcommand*{\MR}{\ensuremath{\mathsf{MR}}}
+\newcommand*{\MDD}{\ensuremath{\mathsf{MDD}}}%
+\newcommand*{\CSD}{\ensuremath{\mathsf{CSD}}}%
+\newcommand*{\SW}{\ensuremath{\mathsf{SW}}}%
+\newcommand*{\MR}{\ensuremath{\mathsf{MR}}}%
 
-% Ceiling and floor
-\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
-\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+% Floor and ceiling
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}%
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}%
 
 % Absolute value and norm
-\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
-\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}%
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}%
 
-% Custom norms and distances
-\newcommand*{\normH}[1]{\ensuremath{\norm{#1}_{\mathrm{H}}}}
-\newcommand*{\normR}[2]{\ensuremath{\norm{#1}_{#2}}}
-\DeclareMathOperator{\dH}{d_H}
-\DeclareMathOperator{\dR}{d_R}
+% Specific norms and distances
+\newcommand*{\normH}[1]{\ensuremath{\norm{#1}_{\mathrm{H}}}}%
+\newcommand*{\normR}[2]{\ensuremath{\norm{#1}_{#2}}}%
+\DeclareMathOperator{\dH}{d_H}%
+\DeclareMathOperator{\dR}{d_R}%
 
 % Set cardinality
-\DeclarePairedDelimiter{\card}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\card}{\lvert}{\rvert}%
 
 % Gaussian binomial coefficient
-\DeclareRobustCommand{\qbinom}{\genfrac[]{0pt}{}}
+\DeclareRobustCommand{\qbinom}{\genfrac[]{0pt}{}}%
 
 % Miscellaneous notation
-\newcommand*{\sys}{\ensuremath{\mathsf{sys}}}
-\newcommand*{\ext}{\ensuremath{\mathsf{ext}}}
-\newcommand*{\reg}{\ensuremath{\mathsf{reg}}}
+\newcommand*{\sys}{\ensuremath{\mathsf{sys}}}%
+\newcommand*{\ext}{\ensuremath{\mathsf{ext}}}%
+\newcommand*{\reg}{\ensuremath{\mathsf{reg}}}%
 
-\newcommand*{\KS}{\ensuremath{\mathsf{KS}}}
-\newcommand*{\GV}{\ensuremath{\mathsf{GV}}}
-\newcommand*{\LB}{\ensuremath{\mathsf{LB}}}
+\newcommand*{\KS}{\ensuremath{\mathsf{KS}}}%
+\newcommand*{\GV}{\ensuremath{\mathsf{GV}}}%
+\newcommand*{\LB}{\ensuremath{\mathsf{LB}}}%
 
-\newcommand*{\Distort}{\mathcal{D}}
+\newcommand*{\Distort}{\mathcal{D}}%
 
-\newcommand*{\PlainISD}{\textsc{Plain}\=/ISD}
-\newcommand*{\LBISD}{LB\=/ISD}
+\newcommand*{\PlainISD}{\textsc{Plain}\=/ISD}%
+\newcommand*{\LBISD}{LB\=/ISD}%
 
 %
 % Title
 %
 
-\title{Error\-/Correcting Codes in the Rank Metric}
-\subtitle{With Applications to Cryptography}
+\title{Error\-/Correcting Codes in the Rank Metric}%
+\subtitle{With Applications to Cryptography}%
 \author[Dario Gj.]{%
   Dario Gjorgjevski\thanks{Mentored by prof.\ Simona Samardjiska}\\%
   \href{mailto:gjorgjevski.dario@students.finki.ukim.mk}%
-  {\nolinkurl{gjorgjevski.dario@students.finki.ukim.mk}}
-}
+  {\nolinkurl{gjorgjevski.dario@students.finki.ukim.mk}}%
+}%
 \institute[FCSE]{%
   Faculty of Computer Science and Engineering\\%
-  Ss.\ Cyril and Methodius University in Skopje
-}
+  Ss.\ Cyril and Methodius University in Skopje%
+}%
 \date{January 30, 2018}
 
 
@@ -185,7 +186,7 @@
 % Logo
 %
 
-%\logo{\includegraphics[height=0.66cm]{../Logo_ФИНКИ.pdf}}
+%\logo{\includegraphics[height=0.66cm]{Logo_ФИНКИ.pdf}}
 
 
 %
@@ -204,8 +205,7 @@
 
 \begin{document}
 
-\begin{frame}[plain]
-  \addtocounter{framenumber}{-1}
+\begin{frame}[plain, noframenumbering]
   \titlepage%
 \end{frame}
 
@@ -239,12 +239,12 @@
   \begin{figure}
     \centering
     \begin{tikzpicture}
-      \node[alice] (alice) {Alice};
-      \node[draw, right=of alice] (encryption) {\(\enc_k(m)\)} edge[<-] node[above] {\(m\)} (alice);
-      \node[draw, right=of encryption] (decryption) {\(\dec_k(c)\)} edge[<-] node[above] {\(c\)} (encryption);
-      \node[bob, right=of decryption, mirrored] (bob) {Bob} edge[<-] node[above] {\(m\)} (decryption);
-      \coordinate (center) at ($(encryption)!0.5!(decryption)$);
-      \node[draw, ellipse, below=1.5cm of center] (key) {Key \(k\)} edge[->] (encryption) edge[->] (decryption);
+      \node[alice] (alice) {Alice};%
+      \node[draw, right=of alice] (encryption) {\(\enc_k(m)\)} edge[<-] node[above] {\(m\)} (alice);%
+      \node[draw, right=of encryption] (decryption) {\(\dec_k(c)\)} edge[<-] node[above] {\(c\)} (encryption);%
+      \node[bob, right=of decryption, mirrored] (bob) {Bob} edge[<-] node[above] {\(m\)} (decryption);%
+      \coordinate (center) at ($(encryption)!0.5!(decryption)$);%
+      \node[draw, ellipse, below=1.5cm of center] (key) {Key \(k\)} edge[->] (encryption) edge[->] (decryption);%
     \end{tikzpicture}
     \caption{Secure communication in the symmetric setting.}
   \end{figure}
@@ -252,15 +252,15 @@
 
 \begin{frame}{The Asymmetric Setting}
   Cryptography in the asymmetric setting is called \emph{public\-/key
-    cryptography}.  The RSA (\citeauthor{RSA78}) cryptosystem is the
-  most widely used and one of the first asymmetric cryptosystems:
+    cryptography}.  The RSA~\autocite{RSA78} cryptosystem is the most
+  widely used and one of the first asymmetric cryptosystems:
   \begin{enumerate}
   \item Encryption is done with the intended recipient's \emph{public
       key}, \(k_{\pub}\), known to everybody.
   \item Decryption is done with the \emph{private key}, \(k_{\priv}\),
     known only to the recipient.
   \end{enumerate}
-  \begin{block}{Real\-/world analogy}
+  \begin{block}{Real-World Analogy}
     Think of a mailbox: encryption corresponds to leaving mail in a
     person's mailbox, decryption to the person opening the mailbox to
     retrieve it.
@@ -282,7 +282,7 @@
       p \times q = \num{281512008712700373730275954373439628511}\text?
     \]
   \end{example}
-  Unfortunately, \citeauthor{Sho97} published an algorithm that can
+  Unfortunately, \textcite{Sho97} published an algorithm that can
   factor integers efficiently and hence \enquote{break} RSA\@.  The
   only drawback: it needs a \alert{quantum computer}.
 \end{frame}
@@ -295,9 +295,8 @@
     to be hard even for quantum computers: the McEliece cryptosystem.
   \item It relies on the hardness of decoding random codes over
     \(\FF_q\) in the Hamming metric.
-  \item The problem was proven \NP\=/complete when \(q = 2\) by
-    \citeauthor{BEvT78}; and in the general case by
-    \citeauthor{Bar94}.
+  \item The problem was proven \(\NP\)\=/complete when \(q = 2\) by
+    \textcite{BEvT78}; and in the general case by \textcite{Bar94}.
   \item The best attacks against McEliece come from a family of
     algorithms called \emph{information set decoding} (ISD).
   \end{itemize}
@@ -309,7 +308,7 @@
     \SI{192}{\kilo\byte} to achieve \num{128}\=/bit security against
     information set decoding \(\implies\) very prohibitive for
     embedded devices.
-  \item \Citeauthor{GPT91} proposed the GPT cryptosystem which uses
+  \item \Textcite{GPT91} proposed the GPT cryptosystem which uses
     error\-/correcting codes in the \emph{rank metric}, as opposed to
     McEliece's Goppa codes which correct errors in the Hamming metric.
   \item GPT is believed to require much smaller keys in order to
@@ -322,7 +321,7 @@
 \begin{frame}{Cryptography and the Information Transmission Model}
   \begin{itemize}
   \item The information transmission model comes from the landmark
-    work of \citeauthor{Sha48}.
+    work of \textcite{Sha48}.
   \item It can be utilized for cryptographic purposes by means of
     error\-/correcting codes.  McEliece is one of the most prominent
     examples of such \emph{code\-/based cryptography}.
@@ -332,23 +331,23 @@
   \begin{figure}
     \centering
     \begin{tikzpicture}[auto, node distance=.5cm]
-      \node[draw] (source) {Source};
-      \node[draw, right=of source] (encoder) {Encoder} edge[<-] (source);
-      \node[draw, right=of encoder] (channel) {Channel} edge[<-] (encoder);
-      \node[draw, right=of channel] (decoder) {Decoder} edge[<-] (channel);
-      \node[draw, right=of decoder] (destination) {Destination} edge[<-] (decoder);
+      \node[draw] (source) {Source};%
+      \node[draw, right=of source] (encoder) {Encoder} edge[<-] (source);%
+      \node[draw, right=of encoder] (channel) {Channel} edge[<-] (encoder);%
+      \node[draw, right=of channel] (decoder) {Decoder} edge[<-] (channel);%
+      \node[draw, right=of decoder] (destination) {Destination} edge[<-] (decoder);%
       
-      \node[draw, ellipse, below=of channel] (noise) {Noise source} edge[->] (channel);
+      \node[draw, ellipse, below=of channel] (noise) {Noise source} edge[->] (channel);%
       
-      \coordinate (source-encoder) at ($(source.east)!0.5!(encoder.west)$);
-      \coordinate (encoder-channel) at ($(encoder.east)!0.5!(channel.west)$);
-      \coordinate (channel-decoder) at ($(channel.east)!0.5!(decoder.west)$);
-      \coordinate (decoder-destination) at ($(decoder.east)!0.5!(destination.west)$);
+      \coordinate (source-encoder) at ($(source.east)!0.5!(encoder.west)$);%
+      \coordinate (encoder-channel) at ($(encoder.east)!0.5!(channel.west)$);%
+      \coordinate (channel-decoder) at ($(channel.east)!0.5!(decoder.west)$);%
+      \coordinate (decoder-destination) at ($(decoder.east)!0.5!(destination.west)$);%
 
-      \node[above=of source-encoder] (message-1) {\(\vec{x}\)} edge[dashed] (source-encoder);
-      \node[above=of encoder-channel] (signal) {\(\vec{c}\)} edge[dashed] (encoder-channel);
-      \node[above=of channel-decoder] (noisy-signal) {\(\vec{y} \coloneqq \vec{c} + \vec{e}\)} edge[dashed] (channel-decoder);
-      \node[above=of decoder-destination] (message-2) {\(\vec{x}\) or \(\bot\)} edge[dashed] (decoder-destination);
+      \node[above=of source-encoder] (message-1) {\(\vec{x}\)} edge[dashed] (source-encoder);%
+      \node[above=of encoder-channel] (signal) {\(\vec{c}\)} edge[dashed] (encoder-channel);%
+      \node[above=of channel-decoder] (noisy-signal) {\(\vec{y} \coloneqq \vec{c} + \vec{e}\)} edge[dashed] (channel-decoder);%
+      \node[above=of decoder-destination] (message-2) {\(\vec{x}\) or \(\bot\)} edge[dashed] (decoder-destination);%
     \end{tikzpicture}
     \caption{Transmitting information over a noisy channel.}
   \end{figure}
@@ -429,8 +428,8 @@
 \subsection{Gabidulin Codes}
 
 \begin{frame}{Generating Gabidulin Codes}
-  \Citeauthor{Gab85} constructed a family of Maximum Rank Distance
-  codes over \(\FF_{q^m}\) of length \(n \le m\).  For any
+  \Textcite{Gab85} constructed a family of Maximum Rank Distance codes
+  over \(\FF_{q^m}\) of length \(n \le m\).  For any
   \(x \in \FF_{q^m}\) and any \(i \in \ZZ\),
   \(x^{[i]} \coloneqq x^{q^i}\).  (The operation is applied
   component\-/wise to vectors and matrices.)
@@ -456,7 +455,8 @@
 
 \subsection{Description of the GPT Cryptosystem}
 
-\begin{frame}{The GPT Cryptosystem}{System Parameters and Key Generation}
+\begin{frame}{The GPT Cryptosystem}{System Parameters and Key
+    Generation}
   \structure{System Parameters}
   \begin{itemize}
   \item Choose \(k, n, m \in \NN\) such that \(k < n \le m\).
@@ -477,7 +477,7 @@
   \item Let \(\mat{X}_1 \in \FF_{q^m}^{k \times l}\) and
     \(\mat{X}_2 \in \FF_{q^m}^{k \times n}\) with
     \(\rank\mat{X}_2 < t\).
-  \item Define the \emph{distortion transformation}
+  \item Define the \emph{distortion transformation}:
     \[
       \Distort(\mat{G}) \coloneqq
       \mat{S}
@@ -494,7 +494,7 @@
     \(t_{\pub} \coloneqq t - \rank\mat{X}_2\).
   \item To \structure{encrypt} \(\vec{x} \in \FF_{q^m}^k\), choose
     \(\vec{e} \in \FF_{q^m}^n\) with
-    \(\normR{\vec{x}}{q} \le t_{\pub}\) and compute
+    \(\normR{\vec{e}}{q} \le t_{\pub}\) and compute
     \(\vec{y} \coloneqq \vec{x} \mat{G}_{\pub} + \vec{e}\).
   \item To \structure{decrypt} \(\vec{y} \in \FF_{q^m}^n\), apply the
     decoding procedure for \(\Gab_k(\vec{g})\) to the last \(n\)
@@ -506,7 +506,7 @@
 
 \begin{frame}{Common Form of the GPT Public Key}
   We simplified and generalized the following theorem due to
-  \citeauthor{Ksh07}.
+  \textcite{Ksh07}.
   \begin{theorem}[GPT Public Key]
     Let \(\mat{G}_{\pub}\) be a public GPT generator, and define
     \(\rank\mat{X}_2 \eqqcolon t_{\mat{X}_2}\).  Then, there exist
@@ -556,7 +556,7 @@
     \]
   \end{lemma}
   On the other hand, if \(\mat{G}\) is a randomly\-/drawn matrix, we
-  obtain something quite different.  \Citeauthor{Ove05} formulated a
+  obtain something quite different.  \Textcite{Ove05} formulated a
   successful attack against GPT using these properties.
   \begin{lemma}
     If \(\mathcal{C} \subset \FF_{q^m}^n\) is a code generated by a
@@ -568,7 +568,7 @@
   \end{lemma}
 \end{frame}
 
-\begin{frame}{Reparation by \citeauthor{Loi17}}
+\begin{frame}{Reparation by \textcite{Loi17}}
   Crucial to the structural attack against GPT are:
   \begin{itemize}
   \item The distinguishing properties of \(\Gab_k(\vec{g})\) under
@@ -576,7 +576,7 @@
   \item The invariance of \(\mat{P} \in \GL_{n + l}(\FF_q)\) under the
     Frobenius automorphism: \(\mat{P}^{[i]} = \mat{P}\).
   \end{itemize}
-  \Citeauthor{Loi17} tackled these issues by
+  \Textcite{Loi17} tackled these issues by:
   \begin{enumerate}
   \item Letting \(\mat{P} \in \GL_{n + l}(\mathcal{W})\), where
     \(\mathcal{W}\) is a \(\lambda\)\=/dimensional subspace of
@@ -589,7 +589,7 @@
   \(\lambda\).
   \begin{alertblock}{No Structural Exploits}
     Our best attacks against this reparation are \emph{generic}.  The
-    state\-/of\-/the\-/art comes from \citeauthor{GRS13}; we will
+    state\-/of\-/the\-/art comes from \textcite{GRS13}; we will
     formulate and assess an ISD\=/inspired algorithm in the rank
     metric.
   \end{alertblock}
@@ -599,7 +599,7 @@
 
 \subsection{State-of-the-Art}
 
-\begin{frame}{Support-Trapping Algorithm by \citeauthor{GRS13}}
+\begin{frame}{Support-Trapping Algorithm by \textcite{GRS13}}
   \begin{itemize}
   \item \(\supp(\vec{e}) \coloneqq\) subspace \(\mathcal{E}\) which
     contains each \(e_i\).
@@ -607,7 +607,7 @@
     w.l.o.g.\ \(w\)\=/dimensional.
   \item However, we may need to guess \(\mathcal{E}' > \mathcal{E}\)
     to be able to solve for \(\vec{e}\).
-  \item \Citeauthor{GRS13} showed how to retrieve \(\vec{e}\) in time
+  \item \Textcite{GRS13} showed how to find \(\vec{e}\) in time
     \(\BigOh(q^{w \ceil{m k / {n}}})\) by:
     \begin{enumerate}
     \item Taking \(\mathcal{E}'\) to be of dimension
@@ -750,8 +750,11 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[plain, c]
-  \addtocounter{framenumber}{-1}
+\begin{frame}[allowframebreaks]{References}
+  \printbibliography[heading=none]
+\end{frame}
+
+\begin{frame}[plain, noframenumbering, c]
   \begin{center}
     \huge%
     \structure{\emph{Thank you for your attention.}}%
