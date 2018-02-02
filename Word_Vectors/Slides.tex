@@ -212,8 +212,8 @@ maxcitenames=2, giveninits, isbn=false, url=false, doi=false]%
   \item Easy to understand.
   \item Easy to code by hand.
     \begin{itemize}
-    \item Have been used as inputs to machine learning algorithms, especially
-      neural networks.
+    \item Have been used as inputs to machine learning algorithms,
+      especially neural networks.
     \end{itemize}
   \item Easy to learn.
     \begin{itemize}
@@ -373,10 +373,11 @@ maxcitenames=2, giveninits, isbn=false, url=false, doi=false]%
   \end{align*}
   Intuitively,
   \begin{itemize}
-  \item If we overestimate (resp.\ underestimate) the probability for word
-    \(w_v\), we subtract from (resp.\ add to) \(\vec{v}'_{w^{\outs}}\) a portion of
-    the input \(\implies\) \(\vec{v}'_{w^{\outs}}\) becomes closer to the averaged
-    input vectors.
+  \item If we overestimate (resp.\ underestimate) the probability for
+    word \(w_v\), we subtract from (resp.\ add to)
+    \(\vec{v}'_{w^{\outs}}\) a portion of the input \(\implies\)
+    \(\vec{v}'_{w^{\outs}}\) becomes closer to the averaged input
+    vectors.
   \item Since \(\partial E / {\partial \vec{h}}\) is the sum of all
     output vectors weighted by their prediction
     errors,~\eqref{eq:update-equations} can be seen as distributing a
